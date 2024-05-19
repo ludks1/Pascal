@@ -23,7 +23,7 @@ if __name__ == '__main__':
         parser = Parser(tokens, 0)
         result = parser.parse()
     except SyntaxError as e:
-        print("Syntax Error:", e)
+        print("Error de compilacion", e)
         sys.exit(1)
     # Return the AST using tokens
     ast = parser.parse()

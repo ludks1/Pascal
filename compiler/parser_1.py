@@ -50,8 +50,24 @@ class Parser(object):
 
     def error(self, token):
         # Returns error message
-        print("ERROR, expected token: %s but got %s." %
-              (token, self.curr_token[0]))
+        error_message = (
+            f"Error de sintaxis en la línea {self.curr_token[2]}: "
+            f"se esperaba '{token}' pero se encontró '{self.curr_token[1]}' "
+            f"(token: {self.curr_token[0]})."
+        )
+        if token == 'TK_SEMICOLON':
+            suggestion = "Tal vez olvidaste un punto y coma ';' al final de la declaración."
+        elif token == 'TK_IDENTIFIER':
+            suggestion = "Asegúrate de que el identificador está bien escrito y declarado previamente."
+        else:
+            suggestion = ""
+
+    # Imprimir el mensaje de error con la sugerencia
+        if suggestion:
+            error_message += f" Sugerencia: {suggestion}"
+
+        print(error_message)
+        raise SyntaxError(error_message)
 
     # ----------------------------------------
     #          PARSER GRAMMAR METHODS
