@@ -36,7 +36,7 @@ class Parser(object):
     def get_token(self):
         # Returns next token in list
         self.curr_token = self.iterator.__next__()
-        return
+        return self.curr_token
 
     def match(self, token):
         # print
@@ -50,22 +50,51 @@ class Parser(object):
 
     def error(self, token):
         # Returns error message
+        error_messages = {
+            'TK_PLUS': "Asegúrate de que el operador '+' está en el lugar correcto.",
+            'TK_MINUS': "Asegúrate de que el operador '-' está en el lugar correcto.",
+            'TK_MULT': "Asegúrate de que el operador '*' está en el lugar correcto.",
+            'TK_DIV_FLOAT': "Asegúrate de que el operador '/' está en el lugar correcto.",
+            'TK_DIV': "Asegúrate de que el operador 'DIV' está en el lugar correcto.",
+            'TK_MOD': "Asegúrate de que el operador 'MOD' está en el lugar correcto.",
+            'TK_COLON': "Asegúrate de que los dos puntos ':' están en el lugar correcto.",
+            'TK_EQUALS': "Asegúrate de que el signo '=' está en el lugar correcto.",
+            'TK_ASSIGNMENT': "Asegúrate de que el operador de asignación ':=' está en el lugar correcto.",
+            'TK_GREATER': "Asegúrate de que el signo '>' está en el lugar correcto.",
+            'TK_LESS': "Asegúrate de que el signo '<' está en el lugar correcto.",
+            'TK_GREATER_EQUALS': "Asegúrate de que el operador '>=' está en el lugar correcto.",
+            'TK_LESS_EQUALS': "Asegúrate de que el operador '<=' está en el lugar correcto.",
+            'TK_EXCLAMATION': "Asegúrate de que el signo '!' está en el lugar correcto.",
+            'TK_NOT_EQUALS': "Asegúrate de que el operador '!=' está en el lugar correcto.",
+            'TK_AND': "Asegúrate de que el operador 'AND' está en el lugar correcto.",
+            'TK_XOR': "Asegúrate de que el operador 'XOR' está en el lugar correcto.",
+            'TK_OR': "Asegúrate de que el operador 'OR' está en el lugar correcto.",
+            'TK_NOT': "Asegúrate de que el operador 'NOT' está en el lugar correcto.",
+            'TK_SEMICOLON': "Tal vez olvidaste un punto y coma ';' al final de la declaración.",
+            'TK_OPEN_PARENTHESIS': "Asegúrate de abrir paréntesis '('.",
+            'TK_APOSTROPHE': "Asegurate de cerrar o abrir el apostrofe.",
+            'TK_CLOSE_PARENTHESIS': "Asegúrate de cerrar paréntesis ')'.",
+            'TK_QUOTE': "Asegúrate de que la comilla está en el lugar correcto.",
+            'TK_BEGIN_COMMENT': "Asegúrate de que el inicio de comentario '(*' está en el lugar correcto.",
+            'TK_END_COMMENT': "Asegúrate de que el fin de comentario '*)' está en el lugar correcto.",
+            'TK_COMMA': "Asegúrate de que la coma ',' está en el lugar correcto.",
+            'TK_RANGE': "Asegúrate de que el rango '~' está en el lugar correcto.",
+            'TK_ARRAY': "Asegúrate de que la palabra clave 'ARRAY' está en el lugar correcto.",
+            'TK_OPEN_BRACKET': "Asegúrate de abrir corchetes '['.",
+            'TK_CLOSE_BRACKET': "Asegúrate de cerrar corchetes ']'.",
+        }
+        
+        # Mensaje de error general
         error_message = (
-            f"Error de sintaxis en la línea {self.curr_token[2]}: "
+            f"Error de sintaxis en la línea {self.address}: "
             f"se esperaba '{token}' pero se encontró '{self.curr_token[1]}' "
             f"(token: {self.curr_token[0]})."
         )
-        if token == 'TK_SEMICOLON':
-            suggestion = "Tal vez olvidaste un punto y coma ';' al final de la declaración."
-        elif token == 'TK_IDENTIFIER':
-            suggestion = "Asegúrate de que el identificador está bien escrito y declarado previamente."
-        else:
-            suggestion = ""
-
-    # Imprimir el mensaje de error con la sugerencia
-        if suggestion:
-            error_message += f" Sugerencia: {suggestion}"
-
+        
+        # Imprimir mensaje específico si está disponible
+        if token in error_messages:
+            print(error_messages[token])
+        
         print(error_message)
         raise SyntaxError(error_message)
 
@@ -166,6 +195,13 @@ class Parser(object):
             if self.curr_token[0] == 'TK_END_CODE':
                 self.instructions.append(
                     {'instruction': 'op_halt', 'ip': self.ip, 'value': 'END.'})
+        else:
+            error_message = (
+            f"Error de sintaxis en la línea {self.curr_token[2]}: "
+            f"se esperaba 'BEGIN' pero se encontró '{self.curr_token[1]}' "
+            f"(token: {self.curr_token[0]})."
+        )
+            print(error_message)
 
     def statements(self):
         # print "Called statements() with " + self.curr_token[1]

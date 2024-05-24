@@ -4,7 +4,6 @@ class Error(Exception):
             self.error_type = error_type
             self.description = description
             self.location = location
-
         def __str__(self):
             return f"{self.error_type}: {self.description} (línea {self.location[0]}, columna {self.location[1]})"
 

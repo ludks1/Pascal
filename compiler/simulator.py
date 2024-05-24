@@ -13,81 +13,61 @@ class Simulator(object):
 
     def simulate(self):
         while True:
-            try:
-                if self.ast[self.ip]['instruction'] == 'op_push':
-                    if self.ast[self.ip]['token'] == 'TK_IDENTIFIER':
-                        self.pushi(self.ast[self.ip]['value'])
-                    else:
-                        self.push(self.ast[self.ip]['value'])
-                elif self.ast[self.ip]['instruction'] == 'op_or':
-                    self.op_or()
-                elif self.ast[self.ip]['instruction'] == 'op_and':
-                    self.op_and()
-                elif self.ast[self.ip]['instruction'] == 'op_xor':
-                    self.op_xor()
-                elif self.ast[self.ip]['instruction'] == 'op_not':
-                    self.op_not()
-                elif self.ast[self.ip]['instruction'] == 'op_mod':
-                    self.mod()
-                elif self.ast[self.ip]['instruction'] == 'op_less':
-                    self.op_less()
-                elif self.ast[self.ip]['instruction'] == 'op_greater':
-                    self.op_greater()
-                elif self.ast[self.ip]['instruction'] == 'op_less_equals':
-                    self.op_lesseq()
-                elif self.ast[self.ip]['instruction'] == 'op_greater_equals':
-                    self.op_greatereq()
-                elif self.ast[self.ip]['instruction'] == 'op_not_equals':
-                    self.op_noteq()
-                elif self.ast[self.ip]['instruction'] == 'op_equals':
-                    self.op_equals()
-                elif self.ast[self.ip]['instruction'] == 'op_div_float':
-                    self.div_float()
-                elif self.ast[self.ip]['instruction'] == 'op_add':
-                    self.add()
-                elif self.ast[self.ip]['instruction'] == 'op_pop':
-                    self.pop(self.ast[self.ip]['value'])
-                elif self.ast[self.ip]['instruction'] == 'op_minus':
-                    self.minus()
-                elif self.ast[self.ip]['instruction'] == 'op_mult':
-                    self.mult()
-                elif self.ast[self.ip]['instruction'] == 'op_halt':
-                    self.halt()
-                elif self.ast[self.ip]['instruction'] == 'op_jfalse':
-                    self.op_jfalse(self.ast[self.ip]['value'])
-                elif self.ast[self.ip]['instruction'] == 'op_jmp':
-                    self.op_jmp(self.ast[self.ip]['value'])
-                elif self.ast[self.ip]['instruction'] == 'op_jtrue':
-                    self.op_jtrue(self.ast[self.ip]['value'])
-                elif self.ast[self.ip]['instruction'] == 'op_writeln':
-                    self.writeln()
+            if self.ast[self.ip]['instruction'] == 'op_push':
+                if self.ast[self.ip]['token'] == 'TK_IDENTIFIER':
+                    self.pushi(self.ast[self.ip]['value'])
                 else:
-                    line, column = self.ast[self.ip]['line'], self.ast[self.ip]['column']
-                    report_error("Error semántico",
-                                 "Instrucción desconocida", (line, column))
-                    break
-                self.ip += 1
+                    self.push(self.ast[self.ip]['value'])
+            elif self.ast[self.ip]['instruction'] == 'op_or':
+                self.op_or()
+            elif self.ast[self.ip]['instruction'] == 'op_and':
+                self.op_and()
+            elif self.ast[self.ip]['instruction'] == 'op_xor':
+                self.op_xor()
+            elif self.ast[self.ip]['instruction'] == 'op_not':
+                self.op_not()
+            elif self.ast[self.ip]['instruction'] == 'op_mod':
+                self.mod()
+            elif self.ast[self.ip]['instruction'] == 'op_less':
+                self.op_less()
+            elif self.ast[self.ip]['instruction'] == 'op_greater':
+                self.op_greater()
+            elif self.ast[self.ip]['instruction'] == 'op_less_equals':
+                self.op_lesseq()
+            elif self.ast[self.ip]['instruction'] == 'op_greater_equals':
+                self.op_greatereq()
+            elif self.ast[self.ip]['instruction'] == 'op_not_equals':
+                self.op_noteq()
+            elif self.ast[self.ip]['instruction'] == 'op_equals':
+                self.op_equals()
+            elif self.ast[self.ip]['instruction'] == 'op_div_float':
+                self.div_float()
+            elif self.ast[self.ip]['instruction'] == 'op_add':
+                self.add()
+            elif self.ast[self.ip]['instruction'] == 'op_pop':
+                self.pop(self.ast[self.ip]['value'])
+            elif self.ast[self.ip]['instruction'] == 'op_minus':
+                self.minus()
+            elif self.ast[self.ip]['instruction'] == 'op_mult':
+                self.mult()
+            elif self.ast[self.ip]['instruction'] == 'op_halt':
+                self.halt()
+            elif self.ast[self.ip]['instruction'] == 'op_jfalse':
+                self.op_jfalse(self.ast[self.ip]['value'])
+            elif self.ast[self.ip]['instruction'] == 'op_jmp':
+                self.op_jmp(self.ast[self.ip]['value'])
+            elif self.ast[self.ip]['instruction'] == 'op_jtrue':
+                self.op_jtrue(self.ast[self.ip]['value'])
+            elif self.ast[self.ip]['instruction'] == 'op_writeln':
+                self.writeln()
+            else:
+                line, column = self.ast[self.ip]['line'], self.ast[self.ip]['column']
+                report_error("Error semántico",
+                             "Instrucción desconocida", (line, column))
+                break
+            self.ip += 1
                 # print self.stack
                 # print "\n"
-            except IndexError:
-                if self.ip >= len(self.ast):
-                    report_error("Error de ejecución",
-                                 "Fin del programa", (self.ip, None))
-                    break
-                else:
-                    report_error("Error de ejecución",
-                                 "Índice fuera de rango", (self.ip, None))
-                    break
-            except TypeError as e:
-                # Handle type errors (e.g., incompatible operand types)
-                line, column = self.ast[self.ip]['line'], self.ast[self.ip]['column']
-                report_error("Error semántico", f"Error de tipo: {
-                             str(e)}", (line, column))
-                break
-            except Exception as e:
-                # Handle other unexpected errors
-                print(f"Error durante la simulación: {e}")
-                sys.exit(1)
 
     def printer(self, iterator, field_names, storage, data):
         table = PrettyTable()

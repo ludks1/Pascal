@@ -615,7 +615,8 @@ class Scanner(object):
         '~': 'TK_RANGE',
         'ARRAY': 'TK_ARRAY',
         '[': 'TK_OPEN_BRACKET',
-        ']': 'TK_CLOSE_BRACKET'
+        ']': 'TK_CLOSE_BRACKET',
+        '\'': 'TK_APOSTROPHE',
     }
 
     SYSTEM = {
